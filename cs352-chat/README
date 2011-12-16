@@ -1,0 +1,49 @@
+                       Rutgers CS352 Example Chat Client
+version 1.0
+Last updated July 31, 2011
+
+This application is free software according to the terms and conditions of
+the GNU General Purpose License, version 2.0 (or higher at your discretion).
+You should have received a copy of the GNU General Purpose License v2.0 along
+with this software as the file LICENSE.  If not, you may download a copy from
+<http://www.gnu.org/licenses/gpl-2.0.txt>.
+
+Compiling the client:
+  The chat client has been written according to Java 1.6.  If you do not have
+  Java 1.6 installed, please download and install the JDK from Oracle at
+  <http://www.oracle.com/technetwork/java/index.html>.
+
+  To compile the chat client, include the "src" directory in the class path and
+  provide edu.rutgers.cs.chat.ChatClient as the main class to be 
+  compiled:
+
+    javac -cp src/ src/edu/rutgers/cs/chat/ChatClient.java
+
+Running the client:
+  The chat client requires 2 command-line parameters: local listen port and 
+  username.  These are the first two parameters to the client.  Optionally,
+  a remote client may be specified as a bootstrap client.  The additional
+  two parameters are the remote host/IP address and port number.
+
+  To start the client with "foo" as the username, listening on port 12345:
+    java -cp src/ edu.rutgers.cs.chat.ChatClient 12345 foo
+
+  To start the client with "foo" as the username, 12345 as the listen port,
+  and 1.2.3.4:9999 as the bootstrap peer:
+    java -cp src/ edu.rutgers.cs.chat.ChatClient 12345 foo 1.2.3.4 9999
+
+Interacting with the console-based user interface:
+  The current version of the chat client comes with a console user interface.
+  Once connected to a remote peer, the user may send messages to all connected
+  clients by typing a CR/LF-terminated string to standard input.  To send the
+  message "Chatting is fun" to all currently-connected clients:
+    Chatting is fun<CR/LF>
+
+  It is possible to send a message to a specific peer (private chat) by 
+  starting the message with @username.  To send the message "I like ponies" 
+  only to username "bar":
+    @bar I like ponies<CR/LF>
+
+  The user may exit the chat client by typing the word "quit" alone on a line:
+    quit<CR/LF>
+
