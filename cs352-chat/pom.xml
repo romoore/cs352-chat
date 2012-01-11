@@ -13,7 +13,7 @@
   </properties>
 
  <scm>
-    <developerConnection>scm:git:https://${user.name}@bitbucket.org/romoore/cs352-chat.git</developerConnection>
+    <developerConnection>scm:git:https://bitbucket.org/romoore/cs352-chat.git</developerConnection>
  </scm>
 
   <build>
