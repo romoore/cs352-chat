@@ -80,6 +80,7 @@ public class ConsoleUI extends Thread implements UIAdapter {
 	/**
 	 * Prints out the chat message to the system out as "username: message"
 	 */
+	@Override
 	public void chatMessageReceived(Client fromClient, long timestamp,
 			String message) {
 		System.out.println(fromClient.getUsername() + ": " + message);

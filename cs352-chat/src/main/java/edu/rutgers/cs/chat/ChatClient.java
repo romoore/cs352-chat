@@ -33,6 +33,7 @@ import edu.rutgers.cs.chat.messaging.ChatMessage;
 import edu.rutgers.cs.chat.messaging.ClientExchangeMessage;
 import edu.rutgers.cs.chat.messaging.MessageListener;
 import edu.rutgers.cs.chat.ui.ConsoleUI;
+import edu.rutgers.cs.chat.ui.UIAdapter;
 import edu.rutgers.cs.chat.ui.UserInputListener;
 
 
@@ -202,7 +203,7 @@ public class ChatClient extends Thread implements MessageListener,
 	 *            the username expected from the remote client.
 	 */
 	protected synchronized void addClient(final String remoteHost,
-			final int port, @SuppressWarnings("hiding") final String username) {
+			final int port, final String username) {
 		// Build a new client object
 		Client newClient = this.makeClient(remoteHost, port, username);
 
@@ -285,7 +286,7 @@ public class ChatClient extends Thread implements MessageListener,
 	 * @return the newly-created Client, or null if an exception was thrown.
 	 */
 	protected Client makeClient(String remoteHost, int port,
-			@SuppressWarnings("hiding") String username) {
+			String username) {
 		Client newClient = new Client(remoteHost, port, username,
 				this.username, this.listenPort);
 		return newClient;
@@ -396,6 +397,7 @@ public class ChatClient extends Thread implements MessageListener,
 	public void chatMessageArrived(final Client client,
 			final ChatMessage message) {
 		this.workers.execute(new Runnable() {
+			@Override
 			public void run() {
 
 				ChatClient.this.userInterface.chatMessageReceived(client,
@@ -413,6 +415,7 @@ public class ChatClient extends Thread implements MessageListener,
 	public void clientMessageArrived(final Client client,
 			final ClientExchangeMessage message) {
 		this.workers.execute(new Runnable() {
+			@Override
 			public void run() {
 				ChatClient.this.addClient(message.getIpAddress(), message
 						.getPort(), message.getUsername());
@@ -428,6 +431,7 @@ public class ChatClient extends Thread implements MessageListener,
 	@Override
 	public void disconnectMessageArrived(final Client client) {
 		this.workers.execute(new Runnable() {
+			@Override
 			public void run() {
 				client.removeMessageListener(ChatClient.this);
 				client.disconnect();
@@ -516,6 +520,7 @@ public class ChatClient extends Thread implements MessageListener,
 	@Override
 	public void broadcastChatMessage(final String input) {
 		this.workers.execute(new Runnable() {
+			@Override
 			public void run() {
 				for (Iterator<Client> clientIter = ChatClient.this.clients
 						.iterator(); clientIter.hasNext();) {
@@ -548,6 +553,7 @@ public class ChatClient extends Thread implements MessageListener,
 	@Override
 	public void privateChatMessage(final Client client, final String message) {
 		this.workers.execute(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					client.sendMessage(message);
