@@ -1,6 +1,6 @@
 /*
  * CS352 Example Chat Client
- * Copyright (C) 2011 Rutgers University and Robert Moore
+ * Copyright (C) 2011-2012 Rutgers University and Robert Moore
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,8 +51,8 @@ public class ChatClient extends Thread implements MessageListener,
 	 * Copyright license notification message printed at startup.
 	 */
 	public static final String LICENSE_NOTIFICATION = 
-		"CS352 Example Chat Client version 1.0\n"+
-		"Copyright (C) 2011 Robert Moore and Rutgers University\n" +
+		"CS352 Example Chat Client version 1.0.4\n"+
+		"Copyright (C) 2011-2012 Robert Moore and Rutgers University\n" +
 		"CS352 Example Chat Client comes with ABSOLUTELY NO WARRANTY.\n" +
 		"This is free software, and you are welcome to redistribute it\n" + 
 		"under certain conditions; see the included file LICENSE for details.";

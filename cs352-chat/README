@@ -20,7 +20,7 @@ Compiling the client:
   provide edu.rutgers.cs.chat.ChatClient as the main class to be 
   compiled:
 
-    javac -cp src/ src/edu/rutgers/cs/chat/ChatClient.java
+    javac -cp src/main/java/ src/main/java/edu/rutgers/cs/chat/ChatClient.java
 
 Running the client:
   The chat client requires 2 command-line parameters: local listen port and 
@@ -29,11 +29,11 @@ Running the client:
   two parameters are the remote host/IP address and port number.
 
   To start the client with "foo" as the username, listening on port 12345:
-    java -cp src/ edu.rutgers.cs.chat.ChatClient 12345 foo
+    java -cp src/main/java/ edu.rutgers.cs.chat.ChatClient 12345 foo
 
   To start the client with "foo" as the username, 12345 as the listen port,
   and 1.2.3.4:9999 as the bootstrap peer:
-    java -cp src/ edu.rutgers.cs.chat.ChatClient 12345 foo 1.2.3.4 9999
+    java -cp src/main/java/ edu.rutgers.cs.chat.ChatClient 12345 foo 1.2.3.4 9999
 
 Interacting with the console-based user interface:
   The current version of the chat client comes with a console user interface.
