@@ -16,9 +16,9 @@ Compiling the client:
   Java 1.6 installed, please download and install the JDK from Oracle at
   <http://www.oracle.com/technetwork/java/index.html>.
 
-  To compile the chat client, include the "src" directory in the class path and
-  provide edu.rutgers.cs.chat.ChatClient as the main class to be 
-  compiled:
+  To compile the chat client, include the "src/main/java" directory in the 
+  class path and provide edu.rutgers.cs.chat.ChatClient as the main class to 
+  be compiled:
 
     javac -cp src/main/java/ src/main/java/edu/rutgers/cs/chat/ChatClient.java
 
