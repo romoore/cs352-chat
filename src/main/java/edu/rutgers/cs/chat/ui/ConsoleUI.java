@@ -96,7 +96,7 @@ public class ConsoleUI extends Thread implements UIAdapter {
    */
   public void terminate() {
     this.keepRunning = false;
-    synchronized(this){
+    synchronized (this) {
       this.interrupt();
     }
   }
@@ -121,11 +121,11 @@ public class ConsoleUI extends Thread implements UIAdapter {
     // Keep awiting user input until the user wants to quit.
     while (this.keepRunning) {
       try {
-        if(!this.reader.ready()){
+        if (!this.reader.ready()) {
           System.out.println("Not ready...");
           try {
             Thread.sleep(100);
-          }catch(InterruptedException ie){
+          } catch (InterruptedException ie) {
             // Ignored
           }
           continue;
@@ -181,8 +181,8 @@ public class ConsoleUI extends Thread implements UIAdapter {
       }
 
     }
-System.out.println("Exited");
-this.listeners.clear();
+
+    this.listeners.clear();
   }
 
   /**
@@ -231,7 +231,7 @@ this.listeners.clear();
   @Override
   public void privateMessageReceived(long timestamp, String message,
       Client client) {
-    System.out.println("("+client.getUsername() + "): " + message);
+    System.out.println("(" + client.getUsername() + "): " + message);
   }
 
 }
