@@ -31,11 +31,18 @@ import edu.rutgers.cs.chat.Client;
 public interface MessageListener {
 
 	/**
-	 * Called when a chat message is received from a remote client.
+	 * Called when a broadcast chat message is received from a remote client.
 	 * @param client the client that sent the chat message.
 	 * @param message the message that was sent
 	 */
 	public void chatMessageArrived(final Client client, final ChatMessage message);
+	
+	/**
+   * Called when a private chat message is received from a remote client.
+   * @param client the client that sent the chat message.
+   * @param message the message that was sent
+   */
+  public void privateChatMessageArrived(final Client client, final PrivateChatMessage message);
 	
 	/**
 	 * Called when a client exchange message is received from a remote client.

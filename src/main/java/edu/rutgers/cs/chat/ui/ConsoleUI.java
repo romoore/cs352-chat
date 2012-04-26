@@ -27,8 +27,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import edu.rutgers.cs.chat.Client;
 
-
-
 /**
  * A simple user interface for the chat client. General chat messages are sent
  * by typing and pressing &lt;Enter&gt;. Private chat messages are specified by
@@ -41,165 +39,199 @@ import edu.rutgers.cs.chat.Client;
  */
 public class ConsoleUI extends Thread implements UIAdapter {
 
-	/**
-	 * Collection of listeners for user input/quit requests.
-	 */
-	protected final Collection<UserInputListener> listeners = new ConcurrentLinkedQueue<UserInputListener>();
+  /**
+   * Collection of listeners for user input/quit requests.
+   */
+  protected final Collection<UserInputListener> listeners = new ConcurrentLinkedQueue<UserInputListener>();
 
-	/**
-	 * List of currently-connected clients. Used to validate private message
-	 * destinations before passing to any UserInterfaceListener interfaces.
-	 */
-	protected final Collection<Client> knownClients = new ConcurrentLinkedQueue<Client>();
+  /**
+   * List of currently-connected clients. Used to validate private message
+   * destinations before passing to any UserInterfaceListener interfaces.
+   */
+  protected final Collection<Client> knownClients = new ConcurrentLinkedQueue<Client>();
 
-	/**
-	 * Flag to keep awaiting user input.
-	 */
-	protected boolean keepRunning = true;
+  /**
+   * Flag to keep awaiting user input.
+   */
+  protected boolean keepRunning = true;
 
-	/**
-	 * Adds a UserInterfaceListener interface to this object's list of listeners.
-	 * 
-	 * @param listener
-	 *            the UserInterfaceListener to add.
-	 */
-	public void addUserInputListener(UserInputListener listener) {
-		this.listeners.add(listener);
-	}
+  /**
+   * The reader for user input.
+   */
+  private BufferedReader reader;
 
-	/**
-	 * Removes a UserInterfaceListener interface from this object's list of listeners.
-	 * 
-	 * @param listener
-	 *            the UserInterfaceListener to remove.
-	 */
-	public void removeUserInputListener(UserInputListener listener) {
-		this.listeners.remove(listener);
-	}
+  /**
+   * Adds a UserInterfaceListener interface to this object's list of listeners.
+   * 
+   * @param listener
+   *          the UserInterfaceListener to add.
+   */
+  @Override
+  public void addUserInputListener(UserInputListener listener) {
+    this.listeners.add(listener);
+  }
 
-	/**
-	 * Prints out the chat message to the system out as "username: message"
-	 */
-	@Override
-	public void chatMessageReceived(Client fromClient, long timestamp,
-			String message) {
-		System.out.println(fromClient.getUsername() + ": " + message);
-	}
+  /**
+   * Removes a UserInterfaceListener interface from this object's list of
+   * listeners.
+   * 
+   * @param listener
+   *          the UserInterfaceListener to remove.
+   */
+  public void removeUserInputListener(UserInputListener listener) {
+    this.listeners.remove(listener);
+  }
 
-	/**
-	 * Continuously awaits user input and passes the chat messages or quit
-	 * request to any registered UserInputListener interfaces.
-	 */
-	@Override
-	public void run() {
+  /**
+   * Prints out the chat message to the system out as "username: message"
+   */
+  @Override
+  public void broadcastMessageReceived(long timestamp, String message,
+      Client fromClient) {
+    System.out.println(fromClient.getUsername() + ": " + message);
+  }
 
-		// Convenience wrapper around System.in
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				System.in));
+  /**
+   * Causes this ConsoleUI to terminate gracefully.
+   */
+  public void terminate() {
+    this.keepRunning = false;
+    synchronized(this){
+      this.interrupt();
+    }
+  }
 
-		// Helpful little instructions.
-		System.out
-				.println("Send broadcast messages by typing and hitting <Enter>.");
-		System.out
-				.println("Send private messages like this: @username message to send.");
-		System.out.println("Type \"quit\" to exit.");
+  /**
+   * Continuously awaits user input and passes the chat messages or quit request
+   * to any registered UserInputListener interfaces.
+   */
+  @Override
+  public void run() {
 
-		// Keep awiting user input until the user wants to quit.
-		while (this.keepRunning) {
-			try {
-				String line = reader.readLine();
-				if ("quit".equalsIgnoreCase(line)) {
-					for (UserInputListener listener : this.listeners) {
-						listener.userRequestedShutdown();
-					}
-					break;
-				}
+    // Convenience wrapper around System.in
+    this.reader = new BufferedReader(new InputStreamReader(System.in));
 
-				if(line == null){
-					continue;
-				}
-				// Check for private message
-				if (line.startsWith("@")) {
-					int usernameBreak = line.indexOf(' ');
-					String username = line.substring(1, usernameBreak);
-					String message = line.substring(usernameBreak + 1, line
-							.length());
-					Client theClient = null;
-					// Find the client based on the username
-					for (Client client : this.knownClients) {
-						if (client.getUsername().equals(username)) {
-							theClient = client;
-							break;
-						}
-					}
-					// If the client wasn't found, print an error message and
-					// await next input
-					if (theClient == null) {
-						System.out.println("Could not find user \"" + username
-								+ "\".");
-						continue;
-					}
+    // Helpful little instructions.
+    System.out
+        .println("Send broadcast messages by typing and hitting <Enter>.");
+    System.out
+        .println("Send private messages like this: @username message to send.");
+    System.out.println("Type \"quit\" to exit.");
 
-					// Notify the listeners that a private message was entered
-					for (UserInputListener listener : this.listeners) {
-						listener.privateChatMessage(theClient, message);
-					}
-				}
-				// Broadcast (general) chat message
-				else {
-					// Notify the listeners that a broadcast chat message was
-					// entered
-					for (UserInputListener listener : this.listeners) {
-						listener.broadcastChatMessage(line);
-					}
-				}
-			} catch (IOException e) {
-				// Left in for debugging
-				e.printStackTrace();
-				continue;
-			}
+    // Keep awiting user input until the user wants to quit.
+    while (this.keepRunning) {
+      try {
+        if(!this.reader.ready()){
+          System.out.println("Not ready...");
+          try {
+            Thread.sleep(100);
+          }catch(InterruptedException ie){
+            // Ignored
+          }
+          continue;
+        }
+        String line = this.reader.readLine();
+        if ("quit".equalsIgnoreCase(line)) {
+          for (UserInputListener listener : this.listeners) {
+            listener.userRequestedShutdown();
+          }
+          break;
+        }
 
-		}
+        if (line == null) {
+          continue;
+        }
+        // Check for private message
+        if (line.startsWith("@")) {
+          int usernameBreak = line.indexOf(' ');
+          String username = line.substring(1, usernameBreak);
+          String message = line.substring(usernameBreak + 1, line.length());
+          Client theClient = null;
+          // Find the client based on the username
+          for (Client client : this.knownClients) {
+            if (client.getUsername().equals(username)) {
+              theClient = client;
+              break;
+            }
+          }
+          // If the client wasn't found, print an error message and
+          // await next input
+          if (theClient == null) {
+            System.out.println("Could not find user \"" + username + "\".");
+            continue;
+          }
 
-	}
+          // Notify the listeners that a private message was entered
+          for (UserInputListener listener : this.listeners) {
+            listener.privateChatMessage(theClient, message);
+          }
+        }
+        // Broadcast (general) chat message
+        else {
+          // Notify the listeners that a broadcast chat message was
+          // entered
+          for (UserInputListener listener : this.listeners) {
+            listener.broadcastChatMessage(line);
+          }
+        }
+      } catch (IOException e) {
+        // Left in for debugging
+        e.printStackTrace();
+        continue;
+      }
 
-	/**
-	 * Does nothing, as the console already echoes the user's input.
-	 */
-	@Override
-	public void chatMessageSent(long timestamp, String message) {
-		// Not going to repeat the message since the console already provides
-		// display
-	}
+    }
+System.out.println("Exited");
+this.listeners.clear();
+  }
 
-	/**
-	 * Adds the client to the collection of known clients.
-	 */
-	@Override
-	public void clientConnected(Client connectedClient) {
-		System.out.println("Connected to " + connectedClient);
-		this.knownClients.add(connectedClient);
-	}
+  /**
+   * Does nothing, as the console already echoes the user's input.
+   */
+  @Override
+  public void broadcastMessageSent(long timestamp, String message) {
+    // Not going to repeat the message since the console already provides
+    // display
+  }
 
-	/**
-	 * Removes the client from the collection of known clients. Prints a
-	 */
-	@Override
-	public void clientDisconnected(Client disconnectedClient, String reason) {
-		this.knownClients.remove(disconnectedClient);
-		System.out.println(disconnectedClient + " disconnected"
-				+ (reason == null ? "." : (" because: " + reason)));
-	}
+  /**
+   * Adds the client to the collection of known clients.
+   */
+  @Override
+  public void clientConnected(Client connectedClient) {
+    System.out.println("Connected to " + connectedClient);
+    this.knownClients.add(connectedClient);
+  }
 
-	/**
-	 * Prints an error message to the console to notify the user that the
-	 * message could not be sent to some client.
-	 */
-	@Override
-	public void messageNotSent(Client client, String message, String reason) {
-		System.out.println("The following message could not be sent to "
-				+ client + ":\n" + message
-				+ (reason == null ? "\n" : "\n\nReason: " + reason));
-	}
+  /**
+   * Removes the client from the collection of known clients. Prints a
+   */
+  @Override
+  public void clientDisconnected(String reason, Client disconnectedClient) {
+    this.knownClients.remove(disconnectedClient);
+    System.out.println(disconnectedClient + " disconnected"
+        + (reason == null ? "." : (" because: " + reason)));
+  }
+
+  /**
+   * Prints an error message to the console to notify the user that the message
+   * could not be sent to some client.
+   */
+  @Override
+  public void messageNotSent(String message, String reason, Client client) {
+    System.out.println("The following message could not be sent to " + client
+        + ":\n" + message + (reason == null ? "\n" : "\n\nReason: " + reason));
+  }
+
+  @Override
+  public void privateMessageSent(long timestamp, String message, Client client) {
+    // Ignored
+  }
+
+  @Override
+  public void privateMessageReceived(long timestamp, String message,
+      Client client) {
+    System.out.println("("+client.getUsername() + "): " + message);
+  }
 
 }

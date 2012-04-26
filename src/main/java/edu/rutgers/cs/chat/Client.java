@@ -32,6 +32,7 @@ import edu.rutgers.cs.chat.messaging.ChatMessage;
 import edu.rutgers.cs.chat.messaging.ClientExchangeMessage;
 import edu.rutgers.cs.chat.messaging.HandshakeMessage;
 import edu.rutgers.cs.chat.messaging.MessageListener;
+import edu.rutgers.cs.chat.messaging.PrivateChatMessage;
 
 
 /**
@@ -279,6 +280,21 @@ public class Client extends Thread {
 				this.localUsername, message);
 		AbstractMessage.encodeMessage(cMessage, this.socket.getOutputStream());
 	}
+	
+	/**
+   * Sends the private chat message to this client.
+   * 
+   * @param message
+   *            the message to send.
+   * @throws IOException
+   *             if an IOException is thrown when writing the message.
+   */
+  public synchronized void sendPrivateMessage(final String message)
+      throws IOException {
+    PrivateChatMessage cMessage = new PrivateChatMessage(System.currentTimeMillis(),
+        this.localUsername, message);
+    AbstractMessage.encodeMessage(cMessage, this.socket.getOutputStream());
+  }
 
 	/**
 	 * Sends a client exchange message to this client.
@@ -374,6 +390,10 @@ public class Client extends Thread {
 						listener.disconnectMessageArrived(Client.this);
 					}
 
+				}else if(message.getType() == AbstractMessage.TYPE_PRIVATE_CHAT_MESSAGE){
+				  for (MessageListener listener : Client.this.listeners) {
+            listener.privateChatMessageArrived(Client.this,(PrivateChatMessage)message);
+          }
 				}
 
 			} catch (Exception e) {

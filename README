@@ -1,7 +1,7 @@
                        Rutgers CS352 Example Chat Client
 
-Version 1.0.4
-Last updated December 17, 2011
+Version 1.0.5
+Last updated April 26, 2012
 
 Git Repository: https://bitbucket.org/romoore/cs352-chat
 
@@ -25,21 +25,26 @@ Compiling the client:
 Running the client:
   The chat client requires 2 command-line parameters: local listen port and 
   username.  These are the first two parameters to the client.  Optionally,
-  a remote client may be specified as a bootstrap client.  The additional
-  two parameters are the remote host/IP address and port number.
+  multiple remote clients may be specified as bootstrap clients.  Each pair of
+  additional parameters are the remote host/IP address and port number.
 
   To start the client with "foo" as the username, listening on port 12345:
     java -cp src/main/java/ edu.rutgers.cs.chat.ChatClient 12345 foo
 
   To start the client with "foo" as the username, 12345 as the listen port,
-  and 1.2.3.4:9999 as the bootstrap peer:
+  and 1.2.3.4:9999 as a bootstrap peer:
     java -cp src/main/java/ edu.rutgers.cs.chat.ChatClient 12345 foo 1.2.3.4 9999
+  
+  To start the client with "foo" as the username, 12345 as the listen port,
+  a GUI, and 1.2.3.4:9999 as a bootstrap peer:
+    java -cp src/main/java/ edu.rutgers.cs.chat.ChatClient 12345 foo 1.2.3.4 \
+      9999 --gui
 
 Interacting with the console-based user interface:
-  The current version of the chat client comes with a console user interface.
-  Once connected to a remote peer, the user may send messages to all connected
-  clients by typing a CR/LF-terminated string to standard input.  To send the
-  message "Chatting is fun" to all currently-connected clients:
+  The current version uses a console user interface by default Once connected
+  to a remote peer, the user may send messages to all connected clients by
+  typing a CR/LF-terminated string to standard input.  To send the message
+  "Chatting is fun" to all currently-connected clients:
     Chatting is fun<CR/LF>
 
   It is possible to send a message to a specific peer (private chat) by 
@@ -50,3 +55,15 @@ Interacting with the console-based user interface:
   The user may exit the chat client by typing the word "quit" alone on a line:
     quit<CR/LF>
 
+Interacting with the graphical user interface (GUI):
+  You can use the GUI by passing --gui as a command-line option at startup.
+  The GUI has several components: the User List shows all connected users,
+  the Chat Log shows the chat history, You Message is a buffer where you can
+  input your next message.  
+  
+  To send your message to all users, type it into the Your Message buffer, and
+  click "Send" or press "Enter".  If you wish to input a newline character in
+  your buffer, use Shift+Enter.  If you want to send a private message to
+  another user, select their name in the User List and then click Send or
+  press Enter after typing your message in the buffer.  You must reselect a
+  user name to send another private message.
