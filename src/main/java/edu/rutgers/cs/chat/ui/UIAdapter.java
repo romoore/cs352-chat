@@ -1,6 +1,6 @@
 /*
  * CS352 Example Chat Client
- * Copyright (C) 2011 Rutgers University and Robert Moore
+ * Copyright (C) 2011-2012 Rutgers University and Robert Moore
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
