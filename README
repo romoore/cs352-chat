@@ -41,7 +41,7 @@ Running the client:
       9999 --gui
 
 Interacting with the console-based user interface:
-  The current version uses a console user interface by default Once connected
+  The current version uses a console user interface by default. Once connected
   to a remote peer, the user may send messages to all connected clients by
   typing a CR/LF-terminated string to standard input.  To send the message
   "Chatting is fun" to all currently-connected clients:
