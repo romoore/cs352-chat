@@ -122,7 +122,6 @@ public class ConsoleUI extends Thread implements UIAdapter {
     while (this.keepRunning) {
       try {
         if (!this.reader.ready()) {
-          System.out.println("Not ready...");
           try {
             Thread.sleep(100);
           } catch (InterruptedException ie) {
