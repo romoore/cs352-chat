@@ -218,6 +218,7 @@ public class GraphicalUI extends JFrame implements UIAdapter, ActionListener,
 		try {
 			doc.insertString(doc.getLength(), text,
 					doc.getStyle(STYLENAME_INFO));
+			SwingUtilities.invokeLater(this.autoScroller);
 		} catch (BadLocationException e) {
 			log.warning("Couldn't update chat with unsent message. Cause: " + e.getMessage());
 		}
@@ -226,6 +227,7 @@ public class GraphicalUI extends JFrame implements UIAdapter, ActionListener,
 
 	@Override
 	public void clientConnected(Client connectedClient) {
+		log.fine(connectedClient + " connected.");
 		this.userListModel.addElement(connectedClient);
 		StyledDocument doc = this.chatDisplay.getStyledDocument();
 		String text = "[" + new SimpleDateFormat().format(new Date()) + "] "
@@ -233,6 +235,7 @@ public class GraphicalUI extends JFrame implements UIAdapter, ActionListener,
 		try {
 			doc.insertString(doc.getLength(), text,
 					doc.getStyle(STYLENAME_INFO));
+			SwingUtilities.invokeLater(this.autoScroller);
 		} catch (BadLocationException e) {
 			log.warning("Couldn't update chat with connection notification. Cause: " + e.getMessage());
 		}
@@ -248,6 +251,7 @@ public class GraphicalUI extends JFrame implements UIAdapter, ActionListener,
 		try {
 			doc.insertString(doc.getLength(), text,
 					doc.getStyle(STYLENAME_INFO));
+			SwingUtilities.invokeLater(this.autoScroller);
 		} catch (BadLocationException e) {
 			log.warning("Couldn't update chat with connection notification. Cause: " + e.getMessage());
 		}

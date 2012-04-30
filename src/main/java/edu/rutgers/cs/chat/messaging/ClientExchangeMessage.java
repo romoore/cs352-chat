@@ -20,6 +20,8 @@
 package edu.rutgers.cs.chat.messaging;
 
 import java.io.UnsupportedEncodingException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Message used to advertise client information between chat clients. 
@@ -28,6 +30,15 @@ import java.io.UnsupportedEncodingException;
  *
  */
 public class ClientExchangeMessage extends AbstractMessage {
+	
+	/**
+	 * Logger for this class.
+	 */
+	private static final Logger log = Logger.getLogger(ClientExchangeMessage.class.getName());
+	
+	static {
+		log.setLevel(Level.ALL);
+	}
 	
 	/**
 	 * The IP address of the client.
@@ -57,6 +68,7 @@ public class ClientExchangeMessage extends AbstractMessage {
 		this.ipAddress = ipAddress;
 		this.port = port;
 		this.username = username;
+		log.finest("Created " + this);
 	}
 	
 	/**

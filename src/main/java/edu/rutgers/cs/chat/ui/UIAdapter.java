@@ -30,6 +30,10 @@ import edu.rutgers.cs.chat.Client;
  * 
  */
 public interface UIAdapter {
+	
+	public static enum UIType{
+		CONSOLE, GRAPHICS
+	}
 
   /**
    * Called when a public chat message is received from a remote client.

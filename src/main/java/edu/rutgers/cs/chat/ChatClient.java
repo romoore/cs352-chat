@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -42,6 +43,7 @@ import edu.rutgers.cs.chat.messaging.PrivateChatMessage;
 import edu.rutgers.cs.chat.ui.ConsoleUI;
 import edu.rutgers.cs.chat.ui.GraphicalUI;
 import edu.rutgers.cs.chat.ui.UIAdapter;
+import edu.rutgers.cs.chat.ui.UIAdapter.UIType;
 import edu.rutgers.cs.chat.ui.UserInputListener;
 
 /**
@@ -135,7 +137,7 @@ public class ChatClient extends Thread implements MessageListener,
 		System.out.println(ChatClient.LICENSE_NOTIFICATION);
 		// Empty line for formatting
 		System.out.println();
-		
+
 		log.info(ChatClient.LICENSE_NOTIFICATION);
 
 		// Check to make sure we have at least 2 arguments (local port,
@@ -163,22 +165,18 @@ public class ChatClient extends Thread implements MessageListener,
 		// Any string is fine, will be encoded in UTF-16 to clients
 		String username = args[1];
 
-		// Create the application with the listen port and username.
-		ChatClient ourClient = new ChatClient(listenPort, username);
-		// Start the client, ensure that incoming connections will be handled if
-		// we
-		// add a bootstrap peer.
-		ourClient.start();
+		ArrayList<Client> optionalClients = new ArrayList<Client>();
 
 		/*
 		 * If the remote host and port were provided, try to connect. Shouldn't
 		 * be fatal if it fails.
 		 */
+		UIType ui = UIType.CONSOLE;
 		if (args.length >= 3) {
 
 			for (int i = 2; i < args.length;) {
 				if ("--gui".equalsIgnoreCase(args[i])) {
-					ourClient.setUseGUI();
+					ui = UIType.GRAPHICS;
 					++i;
 					continue;
 				}
@@ -193,7 +191,9 @@ public class ChatClient extends Thread implements MessageListener,
 						log.severe("Remote port number is out of valid range, won't connect.");
 					} else {
 						// Don't know the remote username, so pass null
-						ourClient.addClient(host, remotePort, null);
+						Client newClient = new Client(host, remotePort, null,
+								username, listenPort);
+						optionalClients.add(newClient);
 					}
 				} catch (NumberFormatException nfe) {
 					log.severe("Invalid port number specified for bootstrap client, won't connect.");
@@ -201,6 +201,16 @@ public class ChatClient extends Thread implements MessageListener,
 			}
 		}
 
+		// Create the application with the listen port and username.
+		ChatClient ourClient = new ChatClient(listenPort, username, ui);
+		// Start the client, ensure that incoming connections will be handled if
+		// we
+		// add a bootstrap peer.
+		ourClient.start();
+		
+		for(Client c : optionalClients){
+			ourClient.addClient(c.getIpAddress(), c.getPort(), c.getUsername());
+		}
 	}
 
 	/**
@@ -212,39 +222,28 @@ public class ChatClient extends Thread implements MessageListener,
 	 * @param username
 	 *            the username to send to other clients.
 	 */
-	public ChatClient(final int listenPort, final String username) {
+	public ChatClient(final int listenPort, final String username,
+			final UIType uiType) {
 		this.listenPort = listenPort;
 		this.username = username;
-		log.finer("Created new chat client on port " + this.listenPort + " for user " + this.username);
-		this.userInterface = new ConsoleUI();
-		log.finer("Created console UI.");
-		
+		log.finer("Created new chat client on port " + this.listenPort
+				+ " for user " + this.username);
+		if (uiType == uiType.CONSOLE) {
+			this.userInterface = new ConsoleUI();
+			log.finer("Created console UI.");
+		} else if (uiType == uiType.GRAPHICS) {
+			this.userInterface = new GraphicalUI(this.username);
+			log.finer("Created graphical UI.");
+		}else{
+			log.severe("Unknown UI type requested: " + uiType);
+			throw new IllegalArgumentException("Unknown UI type " + uiType);
+		}
+
 		this.userInterface.addUserInputListener(this);
 		log.finer("Registering for UI events from " + this.userInterface);
 		if (this.userInterface instanceof ConsoleUI) {
 			((ConsoleUI) this.userInterface).start();
 			log.finer("Started console UI thread.");
-		}
-	}
-
-	/**
-	 * Enables the GUI for this client.
-	 */
-	public void setUseGUI() {
-		
-		if (this.userInterface instanceof ConsoleUI) {
-			log.finer("Setting client to use GUI instead of console UI.");
-			((ConsoleUI) this.userInterface).terminate();
-			log.finer("Shut-down the console UI.");
-			this.userInterface = new GraphicalUI(this.username);
-			log.finer("Created new GUI.");
-			this.userInterface.addUserInputListener(this);
-			log.finer("Registered for UI events from " + this.userInterface);
-			for (Client client : this.clients) {
-				this.userInterface.clientConnected(client);
-			}
-			log.finer("Completed UI replacement.");
-			return;
 		}
 	}
 
@@ -307,9 +306,11 @@ public class ChatClient extends Thread implements MessageListener,
 	 *            the client to register.
 	 */
 	protected void registerClient(Client client) {
+		log.fine("Registering " + client);
 		client.addMessageListener(this);
 		client.start();
 		this.userInterface.clientConnected(client);
+		log.finer("Notified user interface" + this.userInterface);
 	}
 
 	/**
@@ -506,6 +507,7 @@ public class ChatClient extends Thread implements MessageListener,
 	 */
 	@Override
 	public void disconnectMessageArrived(final Client client) {
+		try {
 		this.workers.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -516,7 +518,9 @@ public class ChatClient extends Thread implements MessageListener,
 						client);
 			}
 		});
-
+		}catch(Exception e){
+			log.fine("Couldn't handle disconnect: " + e.getMessage());
+		}
 	}
 
 	/**
