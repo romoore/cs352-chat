@@ -129,7 +129,7 @@ public class ConsoleUI extends Thread implements UIAdapter {
           }
           continue;
         }
-        String line = this.reader.readLine();
+        String line = this.reader.readLine().trim();
         if ("quit".equalsIgnoreCase(line)) {
           for (UserInputListener listener : this.listeners) {
             listener.userRequestedShutdown();
@@ -137,7 +137,7 @@ public class ConsoleUI extends Thread implements UIAdapter {
           break;
         }
 
-        if (line == null) {
+        if (line == null || line.length() == 0) {
           continue;
         }
         // Check for private message
