@@ -26,6 +26,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Base class for all messages exchanged between chat clients. Keeps the encoded
@@ -75,6 +77,15 @@ import java.net.SocketException;
  * 
  */
 public abstract class AbstractMessage {
+	
+	/**
+	 * Logger for this class.
+	 */
+	private static final Logger log = Logger.getLogger(AbstractMessage.class.getName());
+	
+	static {
+		log.setLevel(Level.ALL);
+	}
 
   /**
    * Message type for chat messages.
@@ -262,7 +273,7 @@ public abstract class AbstractMessage {
         break;
       // Error handling
       default:
-        System.err.println("Unknown message type: " + message.getType());
+        log.warning("Unknown message type: " + message.getType());
         break;
       }
     }
@@ -343,7 +354,7 @@ public abstract class AbstractMessage {
       // If the protocol strings do not match, print an error message
       // TODO: Need to signal to the client that the message is invalid
       if (!protocolString.equals(HandshakeMessage.PROTOCOL_STRING)) {
-        System.err.println("Received invalid handshake protocol string: "
+        log.warning("Received invalid handshake protocol string: "
             + protocolString);
       }
 
@@ -385,7 +396,7 @@ public abstract class AbstractMessage {
       break;
     }
     default:
-      System.err.println("Unexpected message type when decoding: "
+      log.warning("Unexpected message type when decoding: "
           + messageType);
     }
 

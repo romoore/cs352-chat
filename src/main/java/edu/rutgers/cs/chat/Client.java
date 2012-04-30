@@ -26,6 +26,8 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import edu.rutgers.cs.chat.messaging.AbstractMessage;
 import edu.rutgers.cs.chat.messaging.ChatMessage;
@@ -44,6 +46,15 @@ import edu.rutgers.cs.chat.messaging.PrivateChatMessage;
  * 
  */
 public class Client extends Thread {
+	
+	/**
+	 * Logging for this class.
+	 */
+	private static final Logger log = Logger.getLogger(Client.class.getName());
+	
+	static {
+		log.setLevel(Level.ALL);
+	}
 
 	/**
 	 * The socket connected to the remote client.
@@ -166,9 +177,7 @@ public class Client extends Thread {
 			sentMessage = new HandshakeMessage(this.localUsername,
 					this.localPort);
 		} catch (UnsupportedEncodingException uee) {
-			System.err.println("Unable to encode handshake.");
-			System.err.println(uee.getMessage());
-			uee.printStackTrace(System.err);
+			log.warning("Unable to encode handshake: " + uee.getMessage());
 			return false;
 		}
 
@@ -177,9 +186,7 @@ public class Client extends Thread {
 			AbstractMessage.encodeMessage(sentMessage, this.socket
 					.getOutputStream());
 		} catch (IOException e) {
-			System.err.println("Unable to send handshake message.");
-			System.err.println(e.getMessage());
-			e.printStackTrace();
+			log.warning("Unable to send handshake message: " + e.getMessage());
 			return false;
 		}
 
@@ -197,16 +204,13 @@ public class Client extends Thread {
 					continue;
 				}
 			} catch (IOException e) {
-				System.err
-						.println("Unable to read handshake from remote client.");
-				System.err.println(e.getMessage());
-				e.printStackTrace();
+				log.warning("Unable to read handshake from remote client: " + e.getMessage());
 				return false;
 			}
 			// Received the wrong type of message, handshake should always be
 			// first
 			if (!(receivedMessage instanceof HandshakeMessage)) {
-				System.err.println("Received non-handshake message: "
+				log.warning("Received non-handshake message: "
 						+ receivedMessage);
 				return false;
 			}
@@ -223,7 +227,7 @@ public class Client extends Thread {
 		else {
 			if (!this.username.equals(((HandshakeMessage) receivedMessage)
 					.getUsername())) {
-				System.err.println("Handshake username did not match "
+				log.warning("Handshake username did not match "
 						+ this.username + "<->"
 						+ ((HandshakeMessage) receivedMessage).getUsername());
 				return false;
@@ -238,7 +242,7 @@ public class Client extends Thread {
 		// Verify that the listen port matches the expected value
 		else if (this.port != ((HandshakeMessage) receivedMessage)
 				.getListenPort()) {
-			System.err.println("Handshake ports did not match " + this.port
+			log.warning("Handshake ports did not match " + this.port
 					+ "<->"
 					+ ((HandshakeMessage) receivedMessage).getListenPort());
 			return false;
@@ -262,7 +266,7 @@ public class Client extends Thread {
 			}
 		} else {
 			// This shouldn't happen, but print an error message just in case
-			System.err.println("Already disconnected?");
+			log.warning("Already disconnected?");
 		}
 	}
 
@@ -398,12 +402,8 @@ public class Client extends Thread {
 
 			} catch (Exception e) {
 				this.keepRunning = false;
-				System.err.println(this
-						+ ": Caught exception while reading from client.");
-				System.err.println(e.getMessage());
-				e.printStackTrace(System.err);
-				// Announce the disconnect to the listeners
-
+				log.warning(this
+						+ ": Caught exception while reading from client: " + e.getMessage());
 				for (MessageListener listener : Client.this.listeners) {
 					listener.disconnectMessageArrived(this);
 				}

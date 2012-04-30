@@ -143,6 +143,9 @@ public class ConsoleUI extends Thread implements UIAdapter {
         // Check for private message
         if (line.startsWith("@")) {
           int usernameBreak = line.indexOf(' ');
+          if(usernameBreak == -1 || usernameBreak == line.length()){
+        	  continue;
+          }
           String username = line.substring(1, usernameBreak);
           String message = line.substring(usernameBreak + 1, line.length());
           Client theClient = null;
