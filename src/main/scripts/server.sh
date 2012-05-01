@@ -36,7 +36,7 @@ parseopts "$@"
 argstart=$?
 shift $(($argstart-1))
 
-if [ $# -ne 1 ]
+if [ $# -ne 0 ]
 then
   usage
   exit 1
@@ -47,4 +47,4 @@ LOCALUSER="ChanHost"
 echo "Launching Chat Server on port $LISTEN_PORT with username \
 \"$LOCALUSER\""
 
-java -jar $JAR_FILE $LISTEN $LOCALUSER
+java -jar $JAR_FILE $LISTEN_PORT $LOCALUSER

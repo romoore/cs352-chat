@@ -4,7 +4,7 @@
 JAR_FILE=cs352-chat-1.0.6-SNAPSHOT.jar
 
 # Host for main server
-SERVER_HOST="host.example.com"
+SERVER_HOST="localhost"
 # Port for main server
 SERVER_PORT=8765
 
@@ -18,15 +18,15 @@ GUI=""
 usage() {
   echo "Usage: `basename $0` [-g] [-s HOST] [-p PORT] USERNAME"
   echo "  -g : Use graphical interface"
-  echo "  -s HOST : Use alternate server hostname"
+  echo "  -h HOST : Use alternate server hostname"
   echo "  -p PORT : User alternate server port"
 }
 
 parseopts() {
-  while getopts ":gs:p:" optname 
+  while getopts ":gh:p:" optname 
     do
       case "$optname" in
-        "s")
+        "h")
           SERVER_HOST="$OPTARG"
           echo "Setting host to $SERVER_HOST"
           ;;
