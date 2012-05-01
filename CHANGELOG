@@ -1,6 +1,6 @@
                        Rutgers CS352 Example Chat Client
                                   Change Log
-Version 1.0.7
+Version 1.0.8
 Last updated April 30, 2012
 
 Project Website: <https://bitbucket.org/romoore/cs352-chat>
@@ -17,6 +17,8 @@ with this software as the file LICENSE.  If not, you may download a copy from
   the summer of 2011 by Robert Moore and the students of the "Internet
   Technology" course at Rutgers University.  This version is maintained by
   Robert Moore and is distributed freely as an open-source project.
+
+Version 1.0.8 - TBD
 
 Version 1.0.7 - April 30, 2012
   + Fixing scripts.
