@@ -59,11 +59,12 @@
 				<version>2.2</version>
 				<configuration>
           <descriptors>
-            <descriptor>src/assemble/distribution.xml</descriptor>
+            <descriptor>src/assemble/bin.xml</descriptor>
+            <descriptor>src/assemble/src.xml</descriptor>
           </descriptors>
 					<descriptorRefs>
 <!--            <descriptorRef>bin-with-scripts</descriptorRef> -->
-            <descriptorRef>src</descriptorRef>
+<!--            <descriptorRef>src</descriptorRef> -->
 					</descriptorRefs>
 					<archive>
 						<manifest>
