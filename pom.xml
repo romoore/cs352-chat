@@ -3,7 +3,7 @@
 
   <groupId>edu.rutgers.cs</groupId>
   <artifactId>cs352-chat</artifactId>
-  <version>1.0.6-SNAPSHOT</version>
+  <version>1.0.6</version>
   <packaging>jar</packaging>
 
   <name>Rutgers CS352 Chat Client</name>
