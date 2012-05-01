@@ -67,8 +67,7 @@ public class ChatClient extends Thread implements MessageListener,
 		Logger root = Logger.getLogger("");
 		ChatClient.replaceConsoleHandler(root, Level.WARNING);
 		try {
-			Handler fileHandler = new FileHandler(ChatClient.class.getName()
-					+ ".log");
+			Handler fileHandler = new FileHandler("cs352-chat.log");
 			fileHandler.setLevel(Level.ALL);
 			fileHandler.setFormatter(new SimpleFormatter());
 			root.addHandler(fileHandler);
