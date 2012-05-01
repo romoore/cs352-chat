@@ -62,10 +62,6 @@
             <descriptor>src/assemble/bin.xml</descriptor>
             <descriptor>src/assemble/src.xml</descriptor>
           </descriptors>
-					<descriptorRefs>
-<!--            <descriptorRef>bin-with-scripts</descriptorRef> -->
-<!--            <descriptorRef>src</descriptorRef> -->
-					</descriptorRefs>
 					<archive>
 						<manifest>
 							<mainClass>edu.rutgers.cs.chat.ChatClient</mainClass>
