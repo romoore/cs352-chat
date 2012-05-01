@@ -1,0 +1,46 @@
+                       Rutgers CS352 Example Chat Client
+                                  Change Log
+Version 1.0.6
+Last updated April 30, 2012
+
+Project Website: <https://bitbucket.org/romoore/cs352-chat>
+
+This application is free software according to the terms and conditions of
+the GNU General Purpose License, version 2.0 (or higher at your discretion).
+You should have received a copy of the GNU General Purpose License v2.0 along
+with this software as the file LICENSE.  If not, you may download a copy from
+<http://www.gnu.org/licenses/gpl-2.0.txt>.
+
+== About ==
+  The Rutgers CS352 Example Chat Client is a simple, peer-to-peer chat client
+  that demonstrates basic network application practices.  It was designed in
+  the summer of 2011 by Robert Moore and the students of the "Internet
+  Technology" course at Rutgers University.  This version is maintained by
+  Robert Moore and is distributed freely as an open-source project.
+
+Version 1.0.6 - April 30, 2012
+  + Tweaked how GUI is loaded.
+  + Adding server/client scripts.
+  + Ignoring empty lines in console UI.
+  + Migrating to Loggers (java.util).
+
+Version 1.0.5 - April 26, 2012
+  + Non-functionality updates.
+  + Removing unnecessary dependencies from project POM.
+
+Version 1.0.4 - April 26, 2012
+  + Adding initial version of GUI.
+  + Adding new messages to support private messaging.
+  + Minor corrections to README.
+  + Removing "cs352-chat" directory from project.
+
+Version 1.0.3 - January 11, 2012
+  + Non-functionality updates.
+  + Trying to automate releases with Maven/Git.
+
+Version 1.0.2 - January 1, 2012
+  + Non-functionality updates.
+  + Updating project layout to match standard Maven organization.
+
+Version 1.0.1 - December 17, 2011
+  + Initial version.
