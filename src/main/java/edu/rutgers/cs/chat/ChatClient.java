@@ -79,7 +79,7 @@ public class ChatClient extends Thread implements MessageListener,
 	/**
 	 * Copyright license notification message printed at startup.
 	 */
-	public static final String LICENSE_NOTIFICATION = "CS352 Example Chat Client version 1.0.6\n"
+	public static final String LICENSE_NOTIFICATION = "CS352 Example Chat Client version 1.0.7\n"
 			+ "Copyright (C) 2011-2012 Robert Moore and Rutgers University\n"
 			+ "CS352 Example Chat Client comes with ABSOLUTELY NO WARRANTY.\n"
 			+ "This is free software, and you are welcome to redistribute it\n"
