@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Location of jar file for WM Browser
-JAR_FILE=cs352-chat-1.0.6-SNAPSHOT.jar
+JAR_FILE=cs352-chat-1.0.7.jar
 
 # Host for main server
 SERVER_HOST="localhost"

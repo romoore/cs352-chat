@@ -1,6 +1,6 @@
                        Rutgers CS352 Example Chat Client
 
-Version 1.0.6
+Version 1.0.7
 Last updated April 30, 2012
 
 Git Repository: https://bitbucket.org/romoore/cs352-chat
@@ -67,3 +67,17 @@ Interacting with the graphical user interface (GUI):
   another user, select their name in the User List and then click Send or
   press Enter after typing your message in the buffer.  You must reselect a
   user name to send another private message.
+
+Start-up scripts:
+  Two start-up scripts have been provided for ease in setting-up a consistent
+  server to run and for clients to connect to.  They are provided in the
+  "scripts" directory, "server.sh" and "client.sh".
+
+  server.sh - By default listens on port 8765, which can be overridden with
+  the "-p PORT" option.
+
+  client.sh - By default connects to another client (server) at
+  localhost:8765.  The host can be set with "-h HOSTNAME", and the port with
+  "-p PORT".  "-g" will cause the client to launch with the GUI instead of the
+  console UI.  The only required parameter is the chat client username,
+  provided as the last command-line parameter.
